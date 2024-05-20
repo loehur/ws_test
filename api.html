@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" placeholder="ketik pesan disini.." id="text" />
+    <button>Send</button>
+    <div id="log"></div>
+
+    <script>
+      var sock = new WebSocket("ws://ws.mdl.my.id:5000");
+
+      var log = document.getElementById("log");
+
+      sock.onopen = function (data) {
+        console.log(data);
+      };
+
+      sock.onmessage = function (event) {
+        console.log(event);
+        log.innerHTML += event.data + "<br>";
+      };
+
+      document.querySelector("button").onclick = function () {
+        var text = document.getElementById("text").value;
+        sock.send(text);
+      };
+    </script>
+  </body>
+</html>
