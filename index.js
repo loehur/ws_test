@@ -1,5 +1,5 @@
 var server = require("ws").Server;
-var s = new server({ port: 8080 });
+var s = new server({ port: 80 });
 var user = {};
 
 s.on("connection", function (ws, req) {
