@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <input type="text" placeholder="ketik pesan disini.." id="text" />
-    <button>Send</button>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <div style="width: 500px; margin: auto; margin-top: 50px;">
+    <form id="form1">
+      <input type="text" placeholder="ketik pesan disini.." name="text" required />
+      <label for="type">Type</label>
+      <input type="text" placeholder="target" name="target" required />
+      <button type="submit">Send</button>
+    </form>
+
     <div id="log"></div>
+  </div>
 
-    <script>
-      var sock = new WebSocket("ws://localhost:5001");
+  <script>
+    var id = prompt("Masukkan id: ");
+    var sock = new WebSocket("ws://localhost:5001?id=" + id);
 
-      var log = document.getElementById("log");
+    var log = document.getElementById("log");
 
-      sock.onopen = function (data) {
-        console.log(data);
-      };
+    sock.onopen = function (data) {
+      console.log(data);
+    };
 
-      sock.onmessage = function (event) {
-        console.log(event);
-        log.innerHTML += event.data + "<br>";
-      };
+    sock.onmessage = function (event) {
+      console.log(event);
+      log.innerHTML += event.data + "<br>";
+    };
 
-      document.querySelector("button").onclick = function () {
-        var text = document.getElementById("text").value;
-        sock.send(text);
-      };
-    </script>
-  </body>
+    const form = document.querySelector('#form1');
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const jsonObject = {};
+      formData.forEach((value, key) => {
+        jsonObject[key] = value;
+      });
+      const jsonString = JSON.stringify(jsonObject);
+      sock.send(jsonString);
+    };
+  </script>
+</body>
+
 </html>

@@ -1,10 +1,31 @@
 var server = require("ws").Server;
 var s = new server({ port: 5001 });
+var user = {};
 
-s.on("connection", function (ws) {
-  ws.onopen = () => ws.send("Connected");
-  ws.on("message", (res, isBinary) => {
-    console.log("msg: " + res);
-    ws.send(res, { binary: isBinary });
+s.on("connection", function (ws, req) {
+  const urlParams = new URLSearchParams(req.url.split('?')[1]);
+  const id = urlParams.get('id');
+  console.log(urlParams);
+  user[id] = ws;
+  ws.on("message", (data, isBinary) => {
+    console.log("Received: " + data);
+    var data = JSON.parse(data);
+
+    if (data.target === "all") {
+      s.clients.forEach(function e(client) {
+        client.send(data.text, { binary: isBinary });
+      });
+    } else {
+      if (typeof user[data.target] !== 'undefined') {
+        user[data.target].send(data.text, { binary: isBinary });
+      } else {
+        ws.send("id undefined", { binary: isBinary });
+      }
+    }
   });
+
+  ws.on('close', function () {
+    delete user[id];
+    console.log('disconnected: ' + id);
+  })
 });
