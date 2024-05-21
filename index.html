@@ -29,6 +29,10 @@
       console.log(data);
     };
 
+    sock.onclose = function (data) {
+      alert('server disconnected!');
+    };
+
     sock.onmessage = function (event) {
       console.log(event);
       log.innerHTML += event.data + "<br>";
@@ -43,6 +47,7 @@
       formData.forEach((value, key) => {
         jsonObject[key] = value;
       });
+      jsonObject['sender'] = id;
       const jsonString = JSON.stringify(jsonObject);
       sock.send(jsonString);
     };
