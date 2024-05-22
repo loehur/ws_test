@@ -2,13 +2,6 @@ var server = require("ws").Server;
 const PORT = 54872;
 var s = new server({ port: PORT });
 
-const express = require('express')
-const app = express()
-app.get('/', (req, res) => {
-  res.send('Server running ...')
-})
-app.listen(3000)
-
 var user = {};
 s.on("connection", function (ws, req) {
   const urlParams = new URLSearchParams(req.url.split("?")[1]);

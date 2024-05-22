@@ -1,55 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
 
-  <body>
-    <div style="width: 500px; margin: auto; margin-top: 50px">
-      <form id="form1">
-        <input
-          type="text"
-          placeholder="ketik pesan disini.."
-          name="text"
-          required
-        />
-        <label for="type">Type</label>
-        <input type="text" placeholder="target" name="target" required />
-        <button type="submit">Send</button>
-      </form>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
 
-      <div id="log"></div>
-    </div>
+<body>
+  <div style="width: 500px; margin: auto; margin-top: 50px">
+    <form id="form1">
+      <input type="text" placeholder="ketik pesan disini.." name="text" required />
+      <label for="type">Type</label>
+      <input type="text" placeholder="target" name="target" required />
+      <button type="submit">Send</button>
+    </form>
 
-    <script>
-      var id = prompt("Masukkan id: ");
-      var sock = new WebSocket("ws://baskaramedia.com:80?id=" + id);
+    <div id="log"></div>
+  </div>
 
-      var log = document.getElementById("log");
+  <script>
+    var id = prompt("Masukkan id: ");
+    var sock = new WebSocket("wss://wssimple.herokuapp.com/?id=" + id);
 
-      sock.onopen = function (data) {
-        console.log(data);
-      };
+    var log = document.getElementById("log");
 
-      sock.onmessage = function (event) {
-        console.log(event);
-        log.innerHTML += event.data + "<br>";
-      };
+    sock.onopen = function (data) {
+      console.log(data);
+    };
 
-      const form = document.querySelector("#form1");
+    sock.onmessage = function (event) {
+      console.log(event);
+      log.innerHTML += event.data + "<br>";
+    };
 
-      form.onsubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const jsonObject = {};
-        formData.forEach((value, key) => {
-          jsonObject[key] = value;
-        });
-        const jsonString = JSON.stringify(jsonObject);
-        sock.send(jsonString);
-      };
-    </script>
-  </body>
+    const form = document.querySelector("#form1");
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const jsonObject = {};
+      formData.forEach((value, key) => {
+        jsonObject[key] = value;
+      });
+      const jsonString = JSON.stringify(jsonObject);
+      sock.send(jsonString);
+    };
+  </script>
+</body>
+
 </html>
