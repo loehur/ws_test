@@ -1,7 +1,15 @@
 var server = require("ws").Server;
-var s = new server({ port: 5001 });
-var user = {};
+const PORT = 54872;
+var s = new server({ port: PORT });
 
+const express = require('express')
+const app = express()
+app.get('/', (req, res) => {
+  res.send('Server running ...')
+})
+app.listen(3000)
+
+var user = {};
 s.on("connection", function (ws, req) {
   const urlParams = new URLSearchParams(req.url.split('?')[1]);
   const id = urlParams.get('id');
@@ -37,3 +45,5 @@ s.on("connection", function (ws, req) {
     console.log('disconnected: ' + id);
   })
 });
+
+console.log("WebSocket running on port: " + PORT);
