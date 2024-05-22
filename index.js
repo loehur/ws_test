@@ -11,8 +11,8 @@ app.listen(3000)
 
 var user = {};
 s.on("connection", function (ws, req) {
-  const urlParams = new URLSearchParams(req.url.split('?')[1]);
-  const id = urlParams.get('id');
+  const urlParams = new URLSearchParams(req.url.split("?")[1]);
+  const id = urlParams.get("id");
   console.log(urlParams);
 
   user[id] = ws;
@@ -32,7 +32,7 @@ s.on("connection", function (ws, req) {
         }
       });
     } else {
-      if (typeof user[data.target] !== 'undefined') {
+      if (typeof user[data.target] !== "undefined") {
         user[data.target].send(data.text, { binary: isBinary });
       } else {
         ws.send("id undefined", { binary: isBinary });
@@ -40,10 +40,10 @@ s.on("connection", function (ws, req) {
     }
   });
 
-  ws.on('close', function () {
+  ws.on("close", function () {
     delete user[id];
-    console.log('disconnected: ' + id);
-  })
+    console.log("disconnected: " + id);
+  });
 });
 
 console.log("WebSocket running on port: " + PORT);
